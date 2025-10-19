@@ -99,10 +99,10 @@ export function MainNav({ pathname }: { pathname: string }) {
           <SidebarMenuItem key={index}>
             <Link href={item.href} passHref>
               <SidebarMenuButton isActive={pathname === item.href} asChild>
-                <a>
-                  {item.icon}
-                  <span>{item.label}</span>
-                </a>
+                  <a>
+                    {item.icon}
+                    <span>{item.label}</span>
+                  </a>
               </SidebarMenuButton>
             </Link>
           </SidebarMenuItem>
@@ -120,7 +120,7 @@ export function MainNavWrapper() {
         setMounted(true);
     }, []);
     
-    if (!mounted || !pathname) {
+    if (!mounted) {
         return (
             <SidebarMenu>
                 {menuItems.map((_, index) => <SidebarMenuSkeleton key={index} showIcon />)}
