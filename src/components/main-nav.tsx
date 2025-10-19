@@ -99,11 +99,9 @@ export function MainNav() {
         ) : (
           <SidebarMenuItem key={index}>
             <Link href={item.href} passHref>
-              <SidebarMenuButton isActive={pathname === item.href} asChild>
-                <a>
+              <SidebarMenuButton isActive={pathname === item.href}>
                   {item.icon}
                   <span>{item.label}</span>
-                </a>
               </SidebarMenuButton>
             </Link>
           </SidebarMenuItem>
