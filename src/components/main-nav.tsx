@@ -10,6 +10,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarMenuSubButton,
+  SidebarMenuSkeleton,
 } from '@/components/ui/sidebar';
 import {
   Collapsible,
@@ -29,10 +30,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export function MainNav() {
-  const pathname = usePathname();
-
-  const menuItems = [
+const menuItems = [
     { href: '/', icon: <LayoutDashboard />, label: 'Dashboard' },
     { href: '/appointments', icon: <Calendar />, label: 'Appointments' },
     { href: '/patients', icon: <Users />, label: 'Patients' },
@@ -48,9 +46,18 @@ export function MainNav() {
     { href: '/awareness', icon: <Sparkles />, label: 'Health Awareness' },
   ];
 
+export function MainNav({ pathname }: { pathname: string | null }) {
   const isSubItemActive = (subItems: { href: string }[]) => {
     return subItems.some((item) => pathname === item.href);
   };
+
+  if (!pathname) {
+    return (
+        <SidebarMenu>
+            {menuItems.map((_, index) => <SidebarMenuSkeleton key={index} showIcon />)}
+        </SidebarMenu>
+    );
+  }
 
   return (
     <SidebarMenu>
@@ -100,8 +107,8 @@ export function MainNav() {
           <SidebarMenuItem key={index}>
             <Link href={item.href} passHref>
               <SidebarMenuButton isActive={pathname === item.href}>
-                  {item.icon}
-                  <span>{item.label}</span>
+                {item.icon}
+                <span>{item.label}</span>
               </SidebarMenuButton>
             </Link>
           </SidebarMenuItem>
@@ -109,4 +116,19 @@ export function MainNav() {
       )}
     </SidebarMenu>
   );
+}
+
+export function MainNavWrapper() {
+    const pathname = usePathname();
+    const [mounted, setMounted] = React.useState(false);
+
+    React.useEffect(() => {
+        setMounted(true);
+    }, []);
+    
+    if (!mounted) {
+        return <MainNav pathname={null} />;
+    }
+
+    return <MainNav pathname={pathname} />;
 }

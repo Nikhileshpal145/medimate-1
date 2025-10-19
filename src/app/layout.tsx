@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Header } from '@/components/header';
 import { Logo } from '@/components/logo';
-import { MainNav } from '@/components/main-nav';
+import { MainNavWrapper } from '@/components/main-nav';
 import { UserNav } from '@/components/user-nav';
 
 import './globals.css';
@@ -58,7 +58,7 @@ export default function RootLayout({
               <Logo />
             </SidebarHeader>
             <SidebarContent>
-              <MainNav />
+              <MainNavWrapper />
             </SidebarContent>
             <SidebarFooter>
               <UserNav />
