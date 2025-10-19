@@ -62,9 +62,7 @@ export function MainNav() {
                 <SidebarMenuButton
                   className="w-full justify-between"
                   isActive={isSubItemActive(item.subItems)}
-                  asChild
                 >
-                  <div>
                     <div className="flex items-center gap-2">
                       {item.icon}
                       <span>{item.label}</span>
@@ -75,7 +73,6 @@ export function MainNav() {
                         'data-[state=open]:rotate-180'
                       )}
                     />
-                  </div>
                 </SidebarMenuButton>
               </CollapsibleTrigger>
             </SidebarMenuItem>
@@ -102,9 +99,11 @@ export function MainNav() {
         ) : (
           <SidebarMenuItem key={index}>
             <Link href={item.href} passHref>
-              <SidebarMenuButton isActive={pathname === item.href}>
-                {item.icon}
-                <span>{item.label}</span>
+              <SidebarMenuButton isActive={pathname === item.href} asChild>
+                <>
+                  {item.icon}
+                  <span>{item.label}</span>
+                </>
               </SidebarMenuButton>
             </Link>
           </SidebarMenuItem>
