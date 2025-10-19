@@ -97,12 +97,12 @@ function MainNav({ pathname }: { pathname: string }) {
           </Collapsible>
         ) : (
           <SidebarMenuItem key={index}>
-            <Link href={item.href} passHref>
-              <SidebarMenuButton isActive={pathname === item.href}>
+             <Link href={item.href} passHref>
+                <SidebarMenuButton isActive={pathname === item.href}>
                   {item.icon}
                   <span>{item.label}</span>
-              </SidebarMenuButton>
-            </Link>
+                </SidebarMenuButton>
+              </Link>
           </SidebarMenuItem>
         )
       )}
