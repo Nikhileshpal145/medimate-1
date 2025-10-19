@@ -62,17 +62,20 @@ export function MainNav() {
                 <SidebarMenuButton
                   className="w-full justify-between"
                   isActive={isSubItemActive(item.subItems)}
+                  asChild
                 >
-                  <div className="flex items-center gap-2">
-                    {item.icon}
-                    <span>{item.label}</span>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      {item.icon}
+                      <span>{item.label}</span>
+                    </div>
+                    <ChevronDown
+                      className={cn(
+                        'h-4 w-4 transition-transform',
+                        'data-[state=open]:rotate-180'
+                      )}
+                    />
                   </div>
-                  <ChevronDown
-                    className={cn(
-                      'h-4 w-4 transition-transform',
-                      'group-data-[state=open]:rotate-180'
-                    )}
-                  />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
             </SidebarMenuItem>
