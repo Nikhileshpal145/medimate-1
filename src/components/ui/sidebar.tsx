@@ -645,8 +645,8 @@ const SidebarMenuBadge = React.forwardRef<
 SidebarMenuBadge.displayName = "SidebarMenuBadge"
 
 const SidebarMenuSkeleton = React.forwardRef<
-  HTMLDivElement,
-  React.ComponentProps<"div"> & {
+  HTMLLIElement,
+  React.ComponentProps<'li'> & {
     showIcon?: boolean
   }
 >(({ className, showIcon = false, ...props }, ref) => {
@@ -656,28 +656,28 @@ const SidebarMenuSkeleton = React.forwardRef<
   }, [])
 
   return (
-    <div
-      ref={ref}
-      data-sidebar="menu-skeleton"
-      className={cn("rounded-md h-8 flex gap-2 px-2 items-center", className)}
-      {...props}
-    >
-      {showIcon && (
-        <Skeleton
-          className="size-4 rounded-md"
-          data-sidebar="menu-skeleton-icon"
-        />
-      )}
-      <Skeleton
-        className="h-4 flex-1 max-w-[--skeleton-width]"
-        data-sidebar="menu-skeleton-text"
-        style={
-          {
-            "--skeleton-width": width,
-          } as React.CSSProperties
-        }
-      />
-    </div>
+    <li ref={ref} {...props}>
+        <div
+          data-sidebar="menu-skeleton"
+          className={cn("rounded-md h-8 flex gap-2 px-2 items-center", className)}
+        >
+          {showIcon && (
+            <Skeleton
+              className="size-4 rounded-md"
+              data-sidebar="menu-skeleton-icon"
+            />
+          )}
+          <Skeleton
+            className="h-4 flex-1 max-w-[--skeleton-width]"
+            data-sidebar="menu-skeleton-text"
+            style={
+              {
+                "--skeleton-width": width,
+              } as React.CSSProperties
+            }
+          />
+        </div>
+    </li>
   )
 })
 SidebarMenuSkeleton.displayName = "SidebarMenuSkeleton"
