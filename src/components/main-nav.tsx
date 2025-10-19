@@ -46,7 +46,7 @@ const menuItems = [
     { href: '/awareness', icon: <Sparkles />, label: 'Health Awareness' },
   ];
 
-export function MainNav({ pathname }: { pathname: string }) {
+function MainNav({ pathname }: { pathname: string }) {
   const isSubItemActive = (subItems: { href: string }[]) => {
     return subItems.some((item) => pathname === item.href);
   };
@@ -98,11 +98,9 @@ export function MainNav({ pathname }: { pathname: string }) {
         ) : (
           <SidebarMenuItem key={index}>
             <Link href={item.href} passHref>
-              <SidebarMenuButton isActive={pathname === item.href} asChild>
-                  <a>
-                    {item.icon}
-                    <span>{item.label}</span>
-                  </a>
+              <SidebarMenuButton isActive={pathname === item.href}>
+                  {item.icon}
+                  <span>{item.label}</span>
               </SidebarMenuButton>
             </Link>
           </SidebarMenuItem>
