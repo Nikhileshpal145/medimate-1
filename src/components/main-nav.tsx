@@ -46,18 +46,10 @@ const menuItems = [
     { href: '/awareness', icon: <Sparkles />, label: 'Health Awareness' },
   ];
 
-export function MainNav({ pathname }: { pathname: string | null }) {
+export function MainNav({ pathname }: { pathname: string }) {
   const isSubItemActive = (subItems: { href: string }[]) => {
     return subItems.some((item) => pathname === item.href);
   };
-
-  if (!pathname) {
-    return (
-        <SidebarMenu>
-            {menuItems.map((_, index) => <SidebarMenuSkeleton key={index} showIcon />)}
-        </SidebarMenu>
-    );
-  }
 
   return (
     <SidebarMenu>
@@ -106,9 +98,11 @@ export function MainNav({ pathname }: { pathname: string | null }) {
         ) : (
           <SidebarMenuItem key={index}>
             <Link href={item.href} passHref>
-              <SidebarMenuButton isActive={pathname === item.href}>
-                {item.icon}
-                <span>{item.label}</span>
+              <SidebarMenuButton isActive={pathname === item.href} asChild>
+                <a>
+                  {item.icon}
+                  <span>{item.label}</span>
+                </a>
               </SidebarMenuButton>
             </Link>
           </SidebarMenuItem>
@@ -126,8 +120,12 @@ export function MainNavWrapper() {
         setMounted(true);
     }, []);
     
-    if (!mounted) {
-        return <MainNav pathname={null} />;
+    if (!mounted || !pathname) {
+        return (
+            <SidebarMenu>
+                {menuItems.map((_, index) => <SidebarMenuSkeleton key={index} showIcon />)}
+            </SidebarMenu>
+        );
     }
 
     return <MainNav pathname={pathname} />;
