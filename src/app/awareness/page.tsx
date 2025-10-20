@@ -35,6 +35,15 @@ export default function AwarenessPage() {
           </Card>
            <Card>
             <CardHeader>
+                <CardTitle>Medical Fact of the Day</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <h3 className="font-semibold">Your brain is more active at night.</h3>
+                <p className="text-sm text-muted-foreground">Contrary to popular belief, your brain is more active when you sleep than when you're awake. It's busy processing information, consolidating memories, and cleaning out toxins.</p>
+            </CardContent>
+          </Card>
+           <Card>
+            <CardHeader>
                 <CardTitle>Weekly Health Tip</CardTitle>
             </CardHeader>
             <CardContent>
