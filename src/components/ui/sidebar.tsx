@@ -650,12 +650,17 @@ const SidebarMenuSkeleton = React.forwardRef<
     showIcon?: boolean
   }
 >(({ className, showIcon = false, ...props }, ref) => {
-  const [width, setWidth] = React.useState('0%');
+  const [mounted, setMounted] = React.useState(false);
+  const [width, setWidth] = React.useState(0);
 
   React.useEffect(() => {
-    // Random width between 50 to 90%.
-    setWidth(`${Math.floor(Math.random() * 40) + 50}%`);
+    setMounted(true);
+    setWidth(Math.floor(Math.random() * 40) + 50);
   }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <li ref={ref} {...props}>
@@ -674,7 +679,7 @@ const SidebarMenuSkeleton = React.forwardRef<
             data-sidebar="menu-skeleton-text"
             style={
               {
-                "--skeleton-width": width,
+                "--skeleton-width": `${width}%`,
               } as React.CSSProperties
             }
           />
