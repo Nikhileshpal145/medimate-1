@@ -2,18 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
-import {
-  SidebarProvider,
-  Sidebar,
-  SidebarHeader,
-  SidebarContent,
-  SidebarFooter,
-  SidebarInset,
-} from '@/components/ui/sidebar';
-import { Header } from '@/components/header';
-import { Logo } from '@/components/logo';
-import { MainNavWrapper } from '@/components/main-nav';
-import { UserNav } from '@/components/user-nav';
+import { FirebaseClientProvider } from '@/firebase/client-provider';
 
 import './globals.css';
 
@@ -52,23 +41,9 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <SidebarProvider>
-          <Sidebar>
-            <SidebarHeader>
-              <Logo />
-            </SidebarHeader>
-            <SidebarContent>
-              <MainNavWrapper />
-            </SidebarContent>
-            <SidebarFooter>
-              <UserNav />
-            </SidebarFooter>
-          </Sidebar>
-          <SidebarInset>
-            <Header />
-            <main className="flex-1 p-4 sm:p-6">{children}</main>
-          </SidebarInset>
-        </SidebarProvider>
+        <FirebaseClientProvider>
+          {children}
+        </FirebaseClientProvider>
         <Toaster />
       </body>
     </html>

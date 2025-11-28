@@ -1,3 +1,9 @@
+import { User } from "firebase/auth";
+
+export type AppUser = User & {
+    role: 'doctor' | 'patient';
+};
+
 export type Patient = {
   id: string;
   name: string;

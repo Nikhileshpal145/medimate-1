@@ -10,26 +10,34 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { PlaceHolderImages } from "@/lib/placeholder-images"
+import { useAuth } from "@/firebase";
+import { useUser } from "@/firebase/auth/use-user";
+import { getAuth, signOut } from "firebase/auth";
 
 export function UserNav() {
-    const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar');
+    const { data: user } = useUser();
+    const auth = getAuth();
+
+    const handleLogout = async () => {
+      await signOut(auth);
+    }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-9 w-9">
-            <AvatarImage src={userAvatar?.imageUrl} alt="@shadcn" data-ai-hint={userAvatar?.imageHint} />
-            <AvatarFallback>DS</AvatarFallback>
+            <AvatarImage src={user?.photoURL || ''} alt={user?.displayName || ''} />
+            <AvatarFallback>{user?.displayName?.charAt(0) || 'U'}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">Dr. Sharma</p>
+            <p className="text-sm font-medium leading-none">{user?.displayName}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              d.sharma@medimate.io
+              {user?.email}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -49,7 +57,7 @@ export function UserNav() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>
           Log out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>

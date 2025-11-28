@@ -33,8 +33,11 @@ import {
   FileText,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useUser } from '@/firebase/auth/use-user';
+import { AppUser } from '@/lib/types';
 
-const menuItems = [
+
+const doctorMenuItems = [
     { href: '/', icon: <LayoutDashboard />, label: 'Dashboard' },
     { href: '/appointments', icon: <Calendar />, label: 'Appointments' },
     { href: '/patients', icon: <Users />, label: 'Patients' },
@@ -54,7 +57,17 @@ const menuItems = [
     { href: '/awareness', icon: <Sparkles />, label: 'Health Awareness' },
   ];
 
-function MainNav({ pathname }: { pathname: string }) {
+const patientMenuItems = [
+    { href: '/', icon: <LayoutDashboard />, label: 'Dashboard' },
+    { href: '/appointments', icon: <Calendar />, label: 'Appointments' },
+    { href: '/symptom-checker', icon: <Bot />, label: 'Symptom Checker' },
+    { href: '/awareness', icon: <Sparkles />, label: 'Health Awareness' },
+];
+
+
+function MainNav({ pathname, user }: { pathname: string, user: AppUser }) {
+  const menuItems = user.role === 'doctor' ? doctorMenuItems : patientMenuItems;
+
   const isSubItemActive = (subItems: { href: string }[]) => {
     return subItems.some((item) => pathname === item.href);
   };
@@ -117,16 +130,18 @@ function MainNav({ pathname }: { pathname: string }) {
 
 export function MainNavWrapper() {
     const pathname = usePathname();
+    const { data: user, isLoading } = useUser();
     const [mounted, setMounted] = React.useState(false);
 
     React.useEffect(() => {
         setMounted(true);
     }, []);
     
-    if (!mounted) {
+    if (!mounted || isLoading || !user) {
+        const skeletonItems = user?.role === 'doctor' ? doctorMenuItems : patientMenuItems;
         return (
             <SidebarMenu>
-                {menuItems.map((item, index) => (
+                {skeletonItems.map((item, index) => (
                     <SidebarMenuItem key={index}>
                         <SidebarMenuSkeleton showIcon />
                     </SidebarMenuItem>
@@ -135,5 +150,5 @@ export function MainNavWrapper() {
         );
     }
 
-    return <MainNav pathname={pathname} />;
+    return <MainNav pathname={pathname} user={user} />;
 }
