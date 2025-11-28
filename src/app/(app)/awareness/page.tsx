@@ -1,5 +1,5 @@
 import { PageHeader } from '@/components/page-header';
-import { HealthQuiz } from './quiz';
+import { HealthQuiz } from '@/app/(app)/awareness/quiz';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import Image from 'next/image';
 
