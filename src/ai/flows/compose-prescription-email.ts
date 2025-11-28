@@ -10,7 +10,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const ComposeEmailInputSchema = z.object({
+const ComposeEmailInputSchema = z.object({
   doctorName: z.string().describe("The name of the doctor."),
   patientName: z.string().describe("The name of the patient."),
   prescription: z.string().describe("The prescribed medicines, including dosage and frequency."),
@@ -18,7 +18,7 @@ export const ComposeEmailInputSchema = z.object({
 });
 export type ComposeEmailInput = z.infer<typeof ComposeEmailInputSchema>;
 
-export const ComposeEmailOutputSchema = z.object({
+const ComposeEmailOutputSchema = z.object({
   emailSubject: z.string().describe("A suitable subject line for the email."),
   emailBody: z.string().describe("The full, formatted email body in a professional and friendly tone. Use Markdown for formatting (e.g., lists, bold text)."),
 });
