@@ -10,12 +10,12 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const SummarizeMedicalReportInputSchema = z.object({
+const SummarizeMedicalReportInputSchema = z.object({
   reportText: z.string().describe("The full text of the medical report to be summarized."),
 });
 export type SummarizeMedicalReportInput = z.infer<typeof SummarizeMedicalReportInputSchema>;
 
-export const SummarizeMedicalReportOutputSchema = z.object({
+const SummarizeMedicalReportOutputSchema = z.object({
   summary: z.string().describe("A concise, well-structured summary of the key findings from the medical report. Use Markdown for lists and emphasis."),
 });
 export type SummarizeMedicalReportOutput = z.infer<typeof SummarizeMedicalReportOutputSchema>;
