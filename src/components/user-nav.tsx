@@ -10,16 +10,16 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useAuth } from "@/firebase";
 import { useUser } from "@/firebase/auth/use-user";
-import { getAuth, signOut } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 export function UserNav() {
     const { data: user } = useUser();
-    const auth = getAuth();
+    const router = useRouter();
 
     const handleLogout = async () => {
-      await signOut(auth);
+      localStorage.removeItem('userRole');
+      router.push('/login');
     }
 
   return (

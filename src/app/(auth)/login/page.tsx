@@ -1,48 +1,34 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAuth } from '@/firebase';
-import { GoogleAuthProvider, signInWithRedirect, getRedirectResult } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
-import { FcGoogle } from 'react-icons/fc';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { Stethoscope, User } from 'lucide-react';
 
 export default function LoginPage() {
-    const auth = useAuth();
     const router = useRouter();
 
-    useEffect(() => {
-        getRedirectResult(auth)
-            .then((result) => {
-                if (result) {
-                    router.push('/');
-                }
-            })
-            .catch((error) => {
-                console.error('Error getting redirect result', error);
-            });
-    }, [auth, router]);
-
-    const handleGoogleSignIn = async () => {
-        const provider = new GoogleAuthProvider();
-        try {
-            await signInWithRedirect(auth, provider);
-        } catch (error) {
-            console.error('Error signing in with Google', error);
-        }
+    const handleLogin = (role: 'doctor' | 'patient') => {
+        // In a real app, you'd perform authentication here.
+        // For this mock version, we'll just store the role and redirect.
+        localStorage.setItem('userRole', role);
+        router.push('/');
     };
 
     return (
         <Card>
             <CardHeader>
                 <CardTitle>Login</CardTitle>
-                <CardDescription>Choose your favorite sign in method</CardDescription>
+                <CardDescription>Select a role to log in</CardDescription>
             </CardHeader>
-            <CardContent>
-                <Button variant="outline" className="w-full" onClick={handleGoogleSignIn}>
-                    <FcGoogle className="mr-2 h-4 w-4" />
-                    Sign in with Google
+            <CardContent className="space-y-4">
+                <Button variant="outline" className="w-full" onClick={() => handleLogin('doctor')}>
+                    <Stethoscope className="mr-2 h-4 w-4" />
+                    Login as Doctor
+                </Button>
+                <Button variant="outline" className="w-full" onClick={() => handleLogin('patient')}>
+                    <User className="mr-2 h-4 w-4" />
+                    Login as Patient
                 </Button>
             </CardContent>
             <CardFooter className='justify-center'>
