@@ -10,7 +10,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const PredictDiseaseProgressionInputSchema = z.object({
+const PredictDiseaseProgressionInputSchema = z.object({
   currentCondition: z.string().describe("The patient's current medical condition (e.g., 'Type 2 Diabetes')."),
   patientAge: z.coerce.number().describe("The patient's age in years."),
   biomarkers: z.string().describe("Key biomarkers and their values (e.g., 'A1C: 7.5%, Blood Pressure: 140/90 mmHg')."),
@@ -20,7 +20,7 @@ export const PredictDiseaseProgressionInputSchema = z.object({
 });
 export type PredictDiseaseProgressionInput = z.infer<typeof PredictDiseaseProgressionInputSchema>;
 
-export const PredictDiseaseProgressionOutputSchema = z.object({
+const PredictDiseaseProgressionOutputSchema = z.object({
   predictedProgression: z.string().describe("A detailed description of the likely disease progression over the specified timeframe."),
   confidenceScore: z.number().min(0).max(1).describe("The confidence score (0 to 1) for the prediction."),
   keyFactors: z.string().describe("The key factors influencing the predicted outcome."),

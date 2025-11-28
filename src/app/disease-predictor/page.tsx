@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { predictDiseaseProgression, PredictDiseaseProgressionOutput, PredictDiseaseProgressionInputSchema } from '@/ai/flows/predict-disease-progression';
+import { predictDiseaseProgression, PredictDiseaseProgressionOutput } from '@/ai/flows/predict-disease-progression';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -24,11 +24,19 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, TrendingUp, ShieldCheck, TestTube2, Stethoscope, HeartPulse } from 'lucide-react';
+import { Loader2, TrendingUp, ShieldCheck, TestTube2, Stethoscope } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { PageHeader } from '@/components/page-header';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+
+const PredictDiseaseProgressionInputSchema = z.object({
+  currentCondition: z.string().describe("The patient's current medical condition (e.g., 'Type 2 Diabetes')."),
+  patientAge: z.coerce.number().describe("The patient's age in years."),
+  biomarkers: z.string().describe("Key biomarkers and their values (e.g., 'A1C: 7.5%, Blood Pressure: 140/90 mmHg')."),
+  treatmentPlan: z.string().describe("The current treatment plan (e.g., 'Metformin 500mg daily, dietary changes')."),
+  lifestyleFactors: z.string().describe("Relevant lifestyle factors (e.g., 'Sedentary, smoker')."),
+  timeframe: z.string().describe("The time frame for the prediction (e.g., '6 months', '1 year').")
+});
 
 export default function DiseasePredictorPage() {
   const [prediction, setPrediction] = useState<PredictDiseaseProgressionOutput | null>(null);
