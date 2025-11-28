@@ -2,20 +2,32 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/firebase';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithRedirect, getRedirectResult } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { FcGoogle } from 'react-icons/fc';
 import Link from 'next/link';
+import { useEffect } from 'react';
 
 export default function LoginPage() {
     const auth = useAuth();
     const router = useRouter();
 
+    useEffect(() => {
+        getRedirectResult(auth)
+            .then((result) => {
+                if (result) {
+                    router.push('/');
+                }
+            })
+            .catch((error) => {
+                console.error('Error getting redirect result', error);
+            });
+    }, [auth, router]);
+
     const handleGoogleSignIn = async () => {
         const provider = new GoogleAuthProvider();
         try {
-            await signInWithPopup(auth, provider);
-            router.push('/');
+            await signInWithRedirect(auth, provider);
         } catch (error) {
             console.error('Error signing in with Google', error);
         }

@@ -2,9 +2,9 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth, useFirestore } from '@/firebase';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithRedirect, getRedirectResult } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { doc, setDoc } from 'firebase/firestore';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -19,6 +19,32 @@ export default function SignupPage() {
     const [role, setRole] = useState<'doctor' | 'patient'>('patient');
     const { toast } = useToast();
 
+    useEffect(() => {
+        getRedirectResult(auth)
+            .then(async (result) => {
+                if (result) {
+                    const user = result.user;
+                    // Persist the selected role from sessionStorage
+                    const savedRole = sessionStorage.getItem('signupRole') || 'patient';
+                    if (user) {
+                        await setDoc(doc(firestore, 'users', user.uid), {
+                            uid: user.uid,
+                            email: user.email,
+                            displayName: user.displayName,
+                            photoURL: user.photoURL,
+                            role: savedRole,
+                        }, { merge: true });
+                        sessionStorage.removeItem('signupRole');
+                    }
+                    router.push('/');
+                }
+            })
+            .catch((error) => {
+                console.error('Error getting redirect result', error);
+                sessionStorage.removeItem('signupRole');
+            });
+    }, [auth, firestore, router]);
+
     const handleGoogleSignIn = async () => {
         if (!role) {
             toast({
@@ -31,23 +57,12 @@ export default function SignupPage() {
 
         const provider = new GoogleAuthProvider();
         try {
-            const userCredential = await signInWithPopup(auth, provider);
-            const user = userCredential.user;
-
-            // Save user role in Firestore
-            if (user) {
-                await setDoc(doc(firestore, 'users', user.uid), {
-                    uid: user.uid,
-                    email: user.email,
-                    displayName: user.displayName,
-                    photoURL: user.photoURL,
-                    role: role,
-                });
-            }
-
-            router.push('/');
+            // Save role to sessionStorage before redirect
+            sessionStorage.setItem('signupRole', role);
+            await signInWithRedirect(auth, provider);
         } catch (error) {
             console.error('Error signing in with Google', error);
+            sessionStorage.removeItem('signupRole');
         }
     };
 
