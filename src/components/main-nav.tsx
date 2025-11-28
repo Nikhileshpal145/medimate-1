@@ -30,6 +30,7 @@ import {
   Mail,
   TrendingUp,
   Bed,
+  FileText,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -49,6 +50,7 @@ const menuItems = [
     { href: '/disease-predictor', icon: <TrendingUp />, label: 'Disease Predictor' },
     { href: '/bed-predictor', icon: <Bed />, label: 'Bed Predictor' },
     { href: '/prescription-emailer', icon: <Mail />, label: 'Prescription Emailer' },
+    { href: '/report-summarizer', icon: <FileText />, label: 'Report Summarizer' },
     { href: '/awareness', icon: <Sparkles />, label: 'Health Awareness' },
   ];
 
