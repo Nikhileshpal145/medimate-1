@@ -15,12 +15,13 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
-import { Loader2, Send, Mic } from 'lucide-react';
+import { Loader2, Send, Mic, MapPin } from 'lucide-react';
 import { ChatMessage } from './chat-message';
 import { PageHeader } from '@/components/page-header';
 
 const formSchema = z.object({
   symptoms: z.string().min(1, 'Please describe your symptoms.'),
+  location: z.string().min(1, 'Please provide your location.'),
 });
 
 type Message = {
@@ -38,6 +39,7 @@ export default function SymptomCheckerPage() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       symptoms: '',
+      location: 'Mumbai, India',
     },
   });
 
@@ -55,12 +57,13 @@ export default function SymptomCheckerPage() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    const userMessage: Message = { id: Date.now(), type: 'user', content: values.symptoms };
+    const userMessageContent = `Symptoms: ${values.symptoms} | Location: ${values.location}`;
+    const userMessage: Message = { id: Date.now(), type: 'user', content: userMessageContent };
     setMessages((prev) => [...prev, userMessage]);
-    form.reset();
+    form.reset({ ...values, symptoms: '' });
 
     try {
-      const result = await symptomChecker({ symptoms: values.symptoms });
+      const result = await symptomChecker({ symptoms: values.symptoms, location: values.location });
       const botMessage: Message = { id: Date.now() + 1, type: 'bot', content: result };
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
@@ -86,7 +89,7 @@ export default function SymptomCheckerPage() {
         <ScrollArea className="h-full" ref={scrollAreaRef}>
           <div className="p-4 space-y-4">
             {messages.length === 0 && (
-                <ChatMessage message={{id: 0, type: 'bot', content: "Hello! How can I help you today? Please describe your symptoms."}} />
+                <ChatMessage message={{id: 0, type: 'bot', content: "Hello! Please describe your symptoms and provide your location (e.g., city) so I can help find nearby doctors."}} />
             )}
             {messages.map((message) => (
               <ChatMessage key={message.id} message={message} />
@@ -99,36 +102,59 @@ export default function SymptomCheckerPage() {
       </div>
       <div className="mt-4">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-start gap-2">
-            <FormField
-              control={form.control}
-              name="symptoms"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormControl>
-                    <Input
-                      placeholder="e.g., 'I have a fever, cough, and a headache.'"
-                      autoComplete="off"
-                      {...field}
-                      disabled={isLoading}
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+            <div className="flex items-start gap-2">
+                 <FormField
+                    control={form.control}
+                    name="symptoms"
+                    render={({ field }) => (
+                        <FormItem className="flex-1">
+                        <FormControl>
+                            <Input
+                            placeholder="e.g., 'I have a fever, cough, and a headache.'"
+                            autoComplete="off"
+                            {...field}
+                            disabled={isLoading}
+                            />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
                     />
+                <Button type="button" variant="outline" size="icon" disabled={isLoading}>
+                <Mic className="h-4 w-4" />
+                <span className="sr-only">Use Voice</span>
+                </Button>
+                <Button type="submit" size="icon" disabled={isLoading}>
+                {isLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                    <Send className="h-4 w-4" />
+                )}
+                <span className="sr-only">Send</span>
+                </Button>
+            </div>
+             <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <div className="relative">
+                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                        placeholder="Your location (e.g., Mumbai, India)"
+                        autoComplete="off"
+                        {...field}
+                        disabled={isLoading}
+                        className="pl-10"
+                        />
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-             <Button type="button" variant="outline" size="icon" disabled={isLoading}>
-              <Mic className="h-4 w-4" />
-              <span className="sr-only">Use Voice</span>
-            </Button>
-            <Button type="submit" size="icon" disabled={isLoading}>
-              {isLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Send className="h-4 w-4" />
-              )}
-              <span className="sr-only">Send</span>
-            </Button>
           </form>
         </Form>
       </div>
