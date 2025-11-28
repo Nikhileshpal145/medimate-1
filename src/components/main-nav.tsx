@@ -29,6 +29,7 @@ import {
   ChevronDown,
   Mail,
   TrendingUp,
+  Bed,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -46,6 +47,7 @@ const menuItems = [
     },
     { href: '/symptom-checker', icon: <Bot />, label: 'Symptom Checker' },
     { href: '/disease-predictor', icon: <TrendingUp />, label: 'Disease Predictor' },
+    { href: '/bed-predictor', icon: <Bed />, label: 'Bed Predictor' },
     { href: '/prescription-emailer', icon: <Mail />, label: 'Prescription Emailer' },
     { href: '/awareness', icon: <Sparkles />, label: 'Health Awareness' },
   ];
