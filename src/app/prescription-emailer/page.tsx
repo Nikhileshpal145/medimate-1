@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { composePrescriptionEmail, ComposeEmailOutput, ComposeEmailInputSchema } from '@/ai/flows/compose-prescription-email';
+import { composePrescriptionEmail, ComposeEmailOutput } from '@/ai/flows/compose-prescription-email';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -27,6 +27,15 @@ import { Textarea } from '@/components/ui/textarea';
 import { Loader2, Copy } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { PageHeader } from '@/components/page-header';
+import { Label } from '@/components/ui/label';
+
+const ComposeEmailInputSchema = z.object({
+  doctorName: z.string().describe("The name of the doctor."),
+  patientName: z.string().describe("The name of the patient."),
+  prescription: z.string().describe("The prescribed medicines, including dosage and frequency."),
+  advice: z.string().describe("Additional advice or instructions from the doctor."),
+});
+
 
 export default function PrescriptionEmailerPage() {
   const [emailContent, setEmailContent] = useState<ComposeEmailOutput | null>(null);
