@@ -1,18 +1,16 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Stethoscope, User } from 'lucide-react';
 
 export default function LoginPage() {
-    const router = useRouter();
 
     const handleLogin = (role: 'doctor' | 'patient') => {
         // In a real app, you'd perform authentication here.
         // For this mock version, we'll just store the role and redirect.
         localStorage.setItem('userRole', role);
-        router.push('/');
+        window.location.href = '/';
     };
 
     return (

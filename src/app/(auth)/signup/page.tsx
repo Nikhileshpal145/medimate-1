@@ -1,7 +1,6 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -9,7 +8,6 @@ import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 
 export default function SignupPage() {
-    const router = useRouter();
     const [role, setRole] = useState<'doctor' | 'patient'>('patient');
     const { toast } = useToast();
 
@@ -25,7 +23,7 @@ export default function SignupPage() {
         // In a real app, you'd create a user here.
         // For this mock version, we'll just store the role and redirect.
         localStorage.setItem('userRole', role);
-        router.push('/');
+        window.location.href = '/';
     };
 
     return (
