@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -24,7 +25,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, BedDouble, AlertTriangle, Forward, FileText } from 'lucide-react';
+import { Loader2, Bed, BedDouble, AlertTriangle, Forward, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { PageHeader } from '@/components/page-header';
 import { Badge } from '@/components/ui/badge';
