@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
@@ -9,15 +10,23 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
-import { Loader2, Send, Mic, MapPin } from 'lucide-react';
+import { Loader2, Send, Mic, MapPin, Square } from 'lucide-react';
 import { ChatMessage } from './chat-message';
 import { PageHeader } from '@/components/page-header';
+import { useToast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
   symptoms: z.string().min(1, 'Please describe your symptoms.'),
@@ -30,10 +39,22 @@ type Message = {
   content: string | SymptomCheckerOutput;
 };
 
+// Add a global SpeechRecognition type
+declare global {
+    interface Window {
+        SpeechRecognition: any;
+        webkitSpeechRecognition: any;
+    }
+}
+
 export default function SymptomCheckerPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [language, setLanguage] = useState('en-US');
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<any | null>(null);
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -43,9 +64,39 @@ export default function SymptomCheckerPage() {
     },
   });
 
+   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        recognitionRef.current = new SpeechRecognition();
+        recognitionRef.current.continuous = false;
+        recognitionRef.current.interimResults = false;
+        recognitionRef.current.onresult = (event: any) => {
+          const transcript = event.results[0][0].transcript;
+          form.setValue('symptoms', transcript);
+          setIsListening(false);
+          form.handleSubmit(onSubmit)();
+        };
+        recognitionRef.current.onerror = (event: any) => {
+          console.error('Speech recognition error:', event.error);
+          toast({ title: 'Voice Error', description: `Could not recognize speech: ${event.error}`, variant: 'destructive'});
+          setIsListening(false);
+        };
+      } else {
+        toast({ title: 'Voice Not Supported', description: 'Your browser does not support voice recognition.', variant: 'destructive' });
+      }
+    }
+  }, [form, toast]);
+
+  useEffect(() => {
+    if (recognitionRef.current) {
+        recognitionRef.current.lang = language;
+    }
+  }, [language]);
+
+
   useEffect(() => {
     if (scrollAreaRef.current) {
-        // A bit of a hack to scroll to the bottom.
         setTimeout(() => {
             const viewport = scrollAreaRef.current?.querySelector('div[data-radix-scroll-area-viewport]');
             if (viewport) {
@@ -54,6 +105,33 @@ export default function SymptomCheckerPage() {
         }, 100);
     }
   }, [messages]);
+
+  const speak = (text: string) => {
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = language;
+        window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  const handleVoiceToggle = () => {
+    if (isListening) {
+        recognitionRef.current?.stop();
+        setIsListening(false);
+    } else {
+        recognitionRef.current?.start();
+        setIsListening(true);
+    }
+  }
+
+  const getAnalysisAsText = (analysis: SymptomCheckerOutput) => {
+    let text = `Based on your symptoms, here is my analysis. `;
+    text += `The criticality is ${analysis.diseaseCriticalness}. `;
+    text += `Potential conditions include: ${analysis.potentialConditions}. `;
+    text += `I recommend the following actions: ${analysis.recommendedActions}. `;
+    text += `You should consider seeing a ${analysis.recommendedDoctorSpecialty}.`;
+    return text;
+  }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
@@ -66,14 +144,18 @@ export default function SymptomCheckerPage() {
       const result = await symptomChecker({ symptoms: values.symptoms, location: values.location });
       const botMessage: Message = { id: Date.now() + 1, type: 'bot', content: result };
       setMessages((prev) => [...prev, botMessage]);
+      const analysisText = getAnalysisAsText(result);
+      speak(analysisText);
     } catch (error) {
       console.error('Symptom check failed:', error);
+      const errorText = "I'm sorry, but I was unable to process your request. Please try again later.";
       const errorMessage: Message = {
         id: Date.now() + 1,
         type: 'bot',
-        content: "I'm sorry, but I was unable to process your request. Please try again later.",
+        content: errorText,
       };
       setMessages((prev) => [...prev, errorMessage]);
+      speak(errorText);
     } finally {
       setIsLoading(false);
     }
@@ -121,9 +203,21 @@ export default function SymptomCheckerPage() {
                         </FormItem>
                     )}
                     />
-                <Button type="button" variant="outline" size="icon" disabled={isLoading}>
-                <Mic className="h-4 w-4" />
-                <span className="sr-only">Use Voice</span>
+                <Select onValueChange={setLanguage} defaultValue={language} disabled={isLoading || isListening}>
+                    <SelectTrigger className="w-[120px]">
+                        <SelectValue placeholder="Language" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="en-US">English</SelectItem>
+                        <SelectItem value="hi-IN">Hindi</SelectItem>
+                        <SelectItem value="bn-IN">Bengali</SelectItem>
+                        <SelectItem value="te-IN">Telugu</SelectItem>
+                        <SelectItem value="mr-IN">Marathi</SelectItem>
+                    </SelectContent>
+                </Select>
+                <Button type="button" variant={isListening ? "destructive" : "outline"} size="icon" onClick={handleVoiceToggle} disabled={isLoading}>
+                    {isListening ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                    <span className="sr-only">{isListening ? "Stop Listening" : "Use Voice"}</span>
                 </Button>
                 <Button type="submit" size="icon" disabled={isLoading}>
                 {isLoading ? (
