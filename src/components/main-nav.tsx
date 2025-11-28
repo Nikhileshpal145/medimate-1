@@ -28,6 +28,7 @@ import {
   Sparkles,
   ChevronDown,
   Mail,
+  TrendingUp,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -44,6 +45,7 @@ const menuItems = [
       ],
     },
     { href: '/symptom-checker', icon: <Bot />, label: 'Symptom Checker' },
+    { href: '/disease-predictor', icon: <TrendingUp />, label: 'Disease Predictor' },
     { href: '/prescription-emailer', icon: <Mail />, label: 'Prescription Emailer' },
     { href: '/awareness', icon: <Sparkles />, label: 'Health Awareness' },
   ];
