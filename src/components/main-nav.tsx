@@ -27,6 +27,7 @@ import {
   Bot,
   Sparkles,
   ChevronDown,
+  Mail,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -43,6 +44,7 @@ const menuItems = [
       ],
     },
     { href: '/symptom-checker', icon: <Bot />, label: 'Symptom Checker' },
+    { href: '/prescription-emailer', icon: <Mail />, label: 'Prescription Emailer' },
     { href: '/awareness', icon: <Sparkles />, label: 'Health Awareness' },
   ];
 
@@ -82,12 +84,9 @@ function MainNav({ pathname }: { pathname: string }) {
                     <Link href={subItem.href} passHref>
                       <SidebarMenuSubButton
                         isActive={pathname === subItem.href}
-                        asChild
                       >
-                        <a>
                           {subItem.icon}
                           <span>{subItem.label}</span>
-                        </a>
                       </SidebarMenuSubButton>
                     </Link>
                   </SidebarMenuSubItem>
@@ -121,7 +120,11 @@ export function MainNavWrapper() {
     if (!mounted) {
         return (
             <SidebarMenu>
-                {menuItems.map((item, index) => <SidebarMenuSkeleton key={index} showIcon />)}
+                {menuItems.map((item, index) => (
+                    <SidebarMenuItem key={index}>
+                        <SidebarMenuSkeleton showIcon />
+                    </SidebarMenuItem>
+                ))}
             </SidebarMenu>
         );
     }
