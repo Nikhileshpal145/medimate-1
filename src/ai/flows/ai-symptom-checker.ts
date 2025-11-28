@@ -1,7 +1,7 @@
 'use server';
 
 /**
- * @fileOverview An AI agent that checks symptoms and provides potential conditions and recommended actions.
+ * @fileOverview An AI agent that checks symptoms and provides potential conditions, recommended actions, disease criticality, and suggests a doctor specialty.
  *
  * - symptomChecker - A function that handles the symptom checking process.
  * - SymptomCheckerInput - The input type for the symptomChecker function.
@@ -25,6 +25,12 @@ const SymptomCheckerOutputSchema = z.object({
   recommendedActions: z
     .string()
     .describe('Recommended actions for the patient to take based on the potential conditions.'),
+  diseaseCriticalness: z
+    .enum(['Low', 'Medium', 'High'])
+    .describe("The criticalness of the potential condition. Can be 'Low', 'Medium', or 'High'."),
+  recommendedDoctorSpecialty: z
+    .string()
+    .describe('The specialty of a doctor recommended for the symptoms (e.g., "General Physician", "Cardiologist").'),
 });
 export type SymptomCheckerOutput = z.infer<typeof SymptomCheckerOutputSchema>;
 
@@ -36,7 +42,11 @@ const prompt = ai.definePrompt({
   name: 'symptomCheckerPrompt',
   input: {schema: SymptomCheckerInputSchema},
   output: {schema: SymptomCheckerOutputSchema},
-  prompt: `You are an AI Health Assistant that helps users understand their health better. Based on the symptoms provided, you will provide a summary of potential conditions and recommended actions.
+  prompt: `You are an AI Health Assistant that helps users understand their health better. Based on the symptoms provided, you will provide:
+1. A summary of potential conditions.
+2. Recommended actions.
+3. An assessment of the disease criticalness ('Low', 'Medium', 'High').
+4. A recommendation for a doctor's specialty (e.g., "General Physician", "Cardiologist").
 
 Symptoms: {{{symptoms}}}
 `,

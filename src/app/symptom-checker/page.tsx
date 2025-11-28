@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { symptomChecker } from '@/ai/flows/ai-symptom-checker';
+import { symptomChecker, SymptomCheckerOutput } from '@/ai/flows/ai-symptom-checker';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -26,7 +26,7 @@ const formSchema = z.object({
 type Message = {
   id: number;
   type: 'user' | 'bot';
-  content: string | { potentialConditions: string; recommendedActions: string };
+  content: string | SymptomCheckerOutput;
 };
 
 export default function SymptomCheckerPage() {
