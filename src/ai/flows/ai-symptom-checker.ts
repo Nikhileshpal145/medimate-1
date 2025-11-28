@@ -17,6 +17,7 @@ const SymptomCheckerInputSchema = z.object({
     .string()
     .describe("A description of the patient's symptoms."),
     location: z.string().describe("The user's current location (e.g., city, state)."),
+    language: z.string().describe("The language for the response (e.g., 'en-US', 'hi-IN')."),
 });
 export type SymptomCheckerInput = z.infer<typeof SymptomCheckerInputSchema>;
 
@@ -78,15 +79,19 @@ const prompt = ai.definePrompt({
   input: {schema: SymptomCheckerInputSchema},
   output: {schema: SymptomCheckerOutputSchema},
   tools: [getNearbyDoctors],
-  prompt: `You are an AI Health Assistant. Based on the symptoms and location provided, you will:
+  prompt: `You are an AI Health Assistant. Your response must be in the language specified in the 'language' field.
+
+Based on the symptoms and location provided, you will:
 1.  Provide a summary of potential conditions.
 2.  Provide recommended actions.
 3.  Assess the disease criticalness ('Low', 'Medium', 'High').
 4.  Determine the appropriate doctor's specialty.
-5.  Use the getNearbyDoctors tool to find doctors of that specialty in the user's location. Include these doctors in the 'recommendedDoctors' field of your response.
+5.  Use the getNearbyDoctors tool to find doctors of that specialty in the user's location. The tool will return doctor information in English. Do not translate doctor names, specialties, or locations.
+6.  Translate all other text fields in your final response (potentialConditions, recommendedActions, and recommendedDoctorSpecialty) to the requested language.
 
 Symptoms: {{{symptoms}}}
 Location: {{{location}}}
+Language: {{{language}}}
 `,
 });
 

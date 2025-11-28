@@ -141,7 +141,7 @@ export default function SymptomCheckerPage() {
     form.reset({ ...values, symptoms: '' });
 
     try {
-      const result = await symptomChecker({ symptoms: values.symptoms, location: values.location });
+      const result = await symptomChecker({ symptoms: values.symptoms, location: values.location, language });
       const botMessage: Message = { id: Date.now() + 1, type: 'bot', content: result };
       setMessages((prev) => [...prev, botMessage]);
       const analysisText = getAnalysisAsText(result);
