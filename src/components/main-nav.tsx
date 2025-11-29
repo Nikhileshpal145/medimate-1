@@ -31,6 +31,7 @@ import {
   TrendingUp,
   Bed,
   FileText,
+  HeartPulse,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useUser } from '@/firebase/auth/use-user';
@@ -39,6 +40,7 @@ import { AppUser } from '@/lib/types';
 
 const doctorMenuItems = [
     { href: '/dashboard', icon: <LayoutDashboard />, label: 'Dashboard' },
+    { href: '/community-health', icon: <HeartPulse />, label: 'Community Health' },
     { href: '/appointments', icon: <Calendar />, label: 'Appointments' },
     { href: '/patients', icon: <Users />, label: 'Patients' },
     {
