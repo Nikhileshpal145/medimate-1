@@ -18,7 +18,7 @@ import {
   import { appointments } from '@/lib/data';
   import { cn } from '@/lib/utils';
   
-  export async function RecentAppointments() {
+  export function RecentAppointments() {
     return (
       <Card>
         <CardHeader>
