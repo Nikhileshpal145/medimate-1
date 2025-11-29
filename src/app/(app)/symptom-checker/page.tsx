@@ -108,6 +108,9 @@ export default function SymptomCheckerPage() {
 
   const speak = (text: string) => {
     if (typeof window !== 'undefined' && window.speechSynthesis) {
+        // Cancel any ongoing speech
+        window.speechSynthesis.cancel();
+        
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = language;
         window.speechSynthesis.speak(utterance);
@@ -164,14 +167,14 @@ export default function SymptomCheckerPage() {
   return (
     <div className="flex flex-col h-[calc(100vh-10rem)]">
       <PageHeader
-        title="AI Symptom Checker"
+        title="Medico: AI Symptom Checker"
         description="Get initial insights based on symptoms. This is not a substitute for professional medical advice."
       />
       <div className="flex-1 overflow-hidden rounded-lg border shadow-sm">
         <ScrollArea className="h-full" ref={scrollAreaRef}>
           <div className="p-4 space-y-4">
             {messages.length === 0 && (
-                <ChatMessage message={{id: 0, type: 'bot', content: "Hello! Please describe your symptoms and provide your location (e.g., city) so I can help find nearby doctors."}} />
+                <ChatMessage message={{id: 0, type: 'bot', content: "Hello! Please describe your symptoms and provide your location (e.g., city) so I can help find nearby doctors. You can type or use the microphone button."}} />
             )}
             {messages.map((message) => (
               <ChatMessage key={message.id} message={message} />

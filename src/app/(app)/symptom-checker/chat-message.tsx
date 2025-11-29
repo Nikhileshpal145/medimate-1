@@ -1,6 +1,7 @@
+
 'use client';
 
-import { Bot, User, AlertTriangle, Lightbulb, MapPin, Stethoscope, Loader2 } from 'lucide-react';
+import { Bot, User, AlertTriangle, Lightbulb, MapPin, Stethoscope, Loader2, Volume2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -26,6 +27,25 @@ const CriticalityBadge = ({ criticality }: { criticality: string }) => {
       return <Badge>{criticality}</Badge>;
   }
 };
+
+const getAnalysisAsText = (analysis: SymptomCheckerOutput) => {
+    let text = `Based on your symptoms, here is my analysis. `;
+    text += `The criticality is ${analysis.diseaseCriticalness}. `;
+    text += `Potential conditions include: ${analysis.potentialConditions}. `;
+    text += `I recommend the following actions: ${analysis.recommendedActions}. `;
+    text += `You should consider seeing a ${analysis.recommendedDoctorSpecialty}.`;
+    return text;
+}
+
+const speak = (text: string, language: string) => {
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = language;
+        window.speechSynthesis.speak(utterance);
+    }
+};
+
 
 export function ChatMessage({ message, isLoading }: { message: Message, isLoading?: boolean }) {
   const isBot = message.type === 'bot';
@@ -60,6 +80,11 @@ export function ChatMessage({ message, isLoading }: { message: Message, isLoadin
                          <h3 className="font-semibold text-base">AI Health Assistant Analysis</h3>
                         <CriticalityBadge criticality={message.content.diseaseCriticalness} />
                     </div>
+
+                    <Button variant="outline" size="sm" onClick={() => speak(getAnalysisAsText(message.content), message.content.language)} className="gap-2">
+                        <Volume2 className="h-4 w-4"/>
+                        Read Aloud
+                    </Button>
                     
                     <div className="space-y-2">
                         <h4 className="font-semibold flex items-center gap-2"><Stethoscope className="h-4 w-4"/> Potential Conditions</h4>
