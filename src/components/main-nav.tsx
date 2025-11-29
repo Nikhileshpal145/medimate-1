@@ -38,7 +38,7 @@ import { AppUser } from '@/lib/types';
 
 
 const doctorMenuItems = [
-    { href: '/', icon: <LayoutDashboard />, label: 'Dashboard' },
+    { href: '/dashboard', icon: <LayoutDashboard />, label: 'Dashboard' },
     { href: '/appointments', icon: <Calendar />, label: 'Appointments' },
     { href: '/patients', icon: <Users />, label: 'Patients' },
     {
@@ -58,7 +58,7 @@ const doctorMenuItems = [
   ];
 
 const patientMenuItems = [
-    { href: '/', icon: <LayoutDashboard />, label: 'Dashboard' },
+    { href: '/dashboard', icon: <LayoutDashboard />, label: 'Dashboard' },
     { href: '/appointments', icon: <Calendar />, label: 'Appointments' },
     { href: '/symptom-checker', icon: <Bot />, label: 'Symptom Checker' },
     { href: '/awareness', icon: <Sparkles />, label: 'Health Awareness' },
