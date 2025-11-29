@@ -20,7 +20,8 @@ export type LocalDiseaseTrendsInput = z.infer<typeof LocalDiseaseTrendsInputSche
 const LocalDiseaseTrendsOutputSchema = z.object({
   alertType: z.string().describe('The type of alert (e.g., flu outbreak, dengue surge).'),
   severity: z.string().describe('The severity of the alert (e.g., low, medium, high).'),
-  recommendations: z.string().describe('Recommendations for healthcare providers and the community.'),
+  providerRecommendations: z.string().describe('Recommendations for healthcare providers.'),
+  communityPrecautions: z.string().describe('Safety instructions and precaution steps for the general public/community.'),
 });
 export type LocalDiseaseTrendsOutput = z.infer<typeof LocalDiseaseTrendsOutputSchema>;
 
@@ -40,12 +41,10 @@ const prompt = ai.definePrompt({
   Time Period: {{{timePeriod}}}
   Historical Data: {{{historicalData}}}
 
-  Based on this information, determine the type of alert, severity, and recommendations for healthcare providers and the community.
-
-  Output:
-  AlertType: The type of alert (e.g., flu outbreak, dengue surge).
-  Severity: The severity of the alert (e.g., low, medium, high).
-  Recommendations: Recommendations for healthcare providers and the community. `,
+  Based on this information, determine the type of alert and its severity. Then, provide two sets of recommendations:
+  1.  **providerRecommendations**: Specific advice for healthcare providers and clinics.
+  2.  **communityPrecautions**: Clear, simple, and actionable safety instructions for the general public.
+  `,
 });
 
 const analyzeLocalDiseaseTrendsFlow = ai.defineFlow(

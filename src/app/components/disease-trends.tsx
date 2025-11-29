@@ -13,8 +13,10 @@ import { Button } from '@/components/ui/button';
 import { Loader2, Siren } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
+import { useUser } from '@/firebase/auth/use-user';
 
 export function DiseaseTrends() {
+  const { data: user } = useUser();
   const [trend, setTrend] = useState<LocalDiseaseTrendsOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -57,20 +59,21 @@ export function DiseaseTrends() {
     }
   };
 
+  const isDoctor = user?.role === 'doctor';
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>AI Disease Trend Analysis</CardTitle>
+        <CardTitle>{isDoctor ? 'AI Disease Trend Analysis' : 'Local Health Alerts'}</CardTitle>
         <CardDescription>
-          Identify potential outbreaks in the local area.
+          {isDoctor ? 'Identify potential outbreaks in the local area.' : 'Stay informed about health trends in your community.'}
         </CardDescription>
       </CardHeader>
       <CardContent>
         {!trend && (
           <Button onClick={handleAnalysis} disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Analyze Local Trends
+            {isDoctor ? 'Analyze Local Trends' : 'Check for Alerts'}
           </Button>
         )}
         {trend && (
@@ -83,12 +86,12 @@ export function DiseaseTrends() {
                         {getSeverityBadge(trend.severity)}
                     </div>
                     <p className="text-sm text-muted-foreground mt-2">
-                        <span className="font-semibold">Recommendations:</span> {trend.recommendations}
+                        <span className="font-semibold">{isDoctor ? 'Provider Recommendations:' : 'Safety Instructions:'}</span> {isDoctor ? trend.providerRecommendations : trend.communityPrecautions}
                     </p>
                 </div>
             </div>
             <Button onClick={handleAnalysis} disabled={isLoading} variant="outline" size="sm">
-                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Re-analyze'}
+                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : isDoctor ? 'Re-analyze' : 'Refresh Alerts'}
             </Button>
           </div>
         )}
