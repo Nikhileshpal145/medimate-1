@@ -108,11 +108,17 @@ export default function SymptomCheckerPage() {
 
   const speak = (text: string) => {
     if (typeof window !== 'undefined' && window.speechSynthesis) {
-        // Cancel any ongoing speech
         window.speechSynthesis.cancel();
         
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = language;
+
+        const voices = window.speechSynthesis.getVoices();
+        const selectedVoice = voices.find(voice => voice.lang === language);
+        if (selectedVoice) {
+            utterance.voice = selectedVoice;
+        }
+
         window.speechSynthesis.speak(utterance);
     }
   };
@@ -148,7 +154,14 @@ export default function SymptomCheckerPage() {
       const botMessage: Message = { id: Date.now() + 1, type: 'bot', content: result };
       setMessages((prev) => [...prev, botMessage]);
       const analysisText = getAnalysisAsText(result);
-      speak(analysisText);
+      // Wait for voices to be loaded before speaking
+      if (window.speechSynthesis.getVoices().length === 0) {
+        window.speechSynthesis.onvoiceschanged = () => {
+            speak(analysisText);
+        };
+      } else {
+          speak(analysisText);
+      }
     } catch (error) {
       console.error('Symptom check failed:', error);
       const errorText = "I'm sorry, but I was unable to process your request. Please try again later.";
