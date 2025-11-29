@@ -62,6 +62,7 @@ const doctorMenuItems = [
 const patientMenuItems = [
     { href: '/dashboard', icon: <LayoutDashboard />, label: 'Dashboard' },
     { href: '/appointments', icon: <Calendar />, label: 'Appointments' },
+    { href: '/family-health', icon: <Users />, label: 'Family Health' },
     { href: '/symptom-checker', icon: <Bot />, label: 'Symptom Checker' },
     { href: '/awareness', icon: <Sparkles />, label: 'Health Awareness' },
 ];

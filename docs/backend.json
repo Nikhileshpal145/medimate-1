@@ -30,9 +30,36 @@
                         "doctor",
                         "patient"
                     ]
+                },
+                "familyId": {
+                    "type": "string",
+                    "description": "The ID of the family this user belongs to."
                 }
             },
             "required": ["uid", "email", "role"]
+        },
+        "family": {
+            "title": "Family",
+            "description": "A group of linked user accounts.",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "The unique ID for the family."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The name of the family (e.g., 'The Sharma Family')."
+                },
+                "memberIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "A list of user UIDs belonging to this family."
+                }
+            },
+            "required": ["id", "name"]
         }
     },
     "auth": {
@@ -44,6 +71,12 @@
                 "$ref": "#/entities/user"
             },
             "description": "Stores user profile information."
+        },
+        "/families/{familyId}": {
+            "schema": {
+                "$ref": "#/entities/family"
+            },
+            "description": "Stores information about a family unit."
         }
     }
 }
