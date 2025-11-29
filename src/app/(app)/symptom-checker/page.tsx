@@ -174,13 +174,16 @@ export default function SymptomCheckerPage() {
         <ScrollArea className="h-full" ref={scrollAreaRef}>
           <div className="p-4 space-y-4">
             {messages.length === 0 && (
-                <ChatMessage message={{id: 0, type: 'bot', content: "Hello! Please describe your symptoms and provide your location (e.g., city) so I can help find nearby doctors. You can type or use the microphone button."}} />
+                <ChatMessage 
+                  message={{id: 0, type: 'bot', content: "Hello! Please describe your symptoms and provide your location (e.g., city) so I can help find nearby doctors. You can type or use the microphone button."}} 
+                  speak={speak}
+                />
             )}
             {messages.map((message) => (
-              <ChatMessage key={message.id} message={message} />
+              <ChatMessage key={message.id} message={message} speak={speak}/>
             ))}
             {isLoading && (
-                 <ChatMessage message={{id: -1, type: 'bot', content: ""}} isLoading={true} />
+                 <ChatMessage message={{id: -1, type: 'bot', content: ""}} isLoading={true} speak={speak}/>
             )}
           </div>
         </ScrollArea>

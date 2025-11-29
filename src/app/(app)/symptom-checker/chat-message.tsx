@@ -15,6 +15,13 @@ type Message = {
     content: string | SymptomCheckerOutput;
 };
 
+interface ChatMessageProps {
+    message: Message;
+    isLoading?: boolean;
+    speak: (text: string) => void;
+}
+
+
 const CriticalityBadge = ({ criticality }: { criticality: string }) => {
   switch (criticality.toLowerCase()) {
     case 'high':
@@ -37,17 +44,8 @@ const getAnalysisAsText = (analysis: SymptomCheckerOutput) => {
     return text;
 }
 
-const speak = (text: string, language: string) => {
-    if (typeof window !== 'undefined' && window.speechSynthesis) {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = language;
-        window.speechSynthesis.speak(utterance);
-    }
-};
 
-
-export function ChatMessage({ message, isLoading }: { message: Message, isLoading?: boolean }) {
+export function ChatMessage({ message, isLoading, speak }: ChatMessageProps) {
   const isBot = message.type === 'bot';
 
   if (isLoading) {
@@ -81,7 +79,7 @@ export function ChatMessage({ message, isLoading }: { message: Message, isLoadin
                         <CriticalityBadge criticality={message.content.diseaseCriticalness} />
                     </div>
 
-                    <Button variant="outline" size="sm" onClick={() => speak(getAnalysisAsText(message.content), message.content.language)} className="gap-2">
+                    <Button variant="outline" size="sm" onClick={() => speak(getAnalysisAsText(message.content))} className="gap-2">
                         <Volume2 className="h-4 w-4"/>
                         Read Aloud
                     </Button>
