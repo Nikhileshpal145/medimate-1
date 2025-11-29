@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Bot, User, AlertTriangle, Lightbulb, MapPin, Stethoscope, Loader2, Volume2 } from 'lucide-react';
@@ -79,7 +78,7 @@ export function ChatMessage({ message, isLoading, speak }: ChatMessageProps) {
                         <CriticalityBadge criticality={message.content.diseaseCriticalness} />
                     </div>
 
-                    <Button variant="outline" size="sm" onClick={() => speak(getAnalysisAsText(message.content))} className="gap-2">
+                    <Button variant="outline" size="sm" onClick={() => speak(getAnalysisAsText(message.content as SymptomCheckerOutput))} className="gap-2">
                         <Volume2 className="h-4 w-4"/>
                         Read Aloud
                     </Button>
