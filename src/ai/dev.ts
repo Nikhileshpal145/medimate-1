@@ -13,3 +13,4 @@ import '@/ai/flows/predict-bed-occupancy.ts';
 import '@/ai/flows/summarize-medical-report.ts';
 import '@/ai/flows/analyze-community-health.ts';
 import '@/ai/flows/analyze-family-health.ts';
+import '@/ai/flows/generate-personalized-health-plan.ts';

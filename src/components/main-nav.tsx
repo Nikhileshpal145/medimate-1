@@ -32,6 +32,7 @@ import {
   Bed,
   FileText,
   HeartPulse,
+  ClipboardCheck,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useUser } from '@/firebase/auth/use-user';
@@ -63,6 +64,7 @@ const patientMenuItems = [
     { href: '/dashboard', icon: <LayoutDashboard />, label: 'Dashboard' },
     { href: '/appointments', icon: <Calendar />, label: 'Appointments' },
     { href: '/family-health', icon: <Users />, label: 'Family Health' },
+    { href: '/health-plan', icon: <ClipboardCheck />, label: 'My Health Plan'},
     { href: '/symptom-checker', icon: <Bot />, label: 'Symptom Checker' },
     { href: '/awareness', icon: <Sparkles />, label: 'Health Awareness' },
 ];
