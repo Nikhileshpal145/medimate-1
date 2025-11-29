@@ -52,7 +52,7 @@ const doctorMenuItems = [
         { href: '/inventory/medicine', icon: <Pill />, label: 'Medicines' },
       ],
     },
-    { href: '/symptom-checker', icon: <Bot />, label: 'Symptom Checker' },
+    { href: '/symptom-checker', icon: <Bot />, label: 'Medico' },
     { href: '/disease-predictor', icon: <TrendingUp />, label: 'Disease Predictor' },
     { href: '/bed-predictor', icon: <Bed />, label: 'Bed Predictor' },
     { href: '/prescription-emailer', icon: <Mail />, label: 'Prescription Emailer' },
@@ -65,7 +65,7 @@ const patientMenuItems = [
     { href: '/appointments', icon: <Calendar />, label: 'Appointments' },
     { href: '/family-health', icon: <Users />, label: 'Family Health' },
     { href: '/health-plan', icon: <ClipboardCheck />, label: 'My Health Plan'},
-    { href: '/symptom-checker', icon: <Bot />, label: 'Symptom Checker' },
+    { href: '/symptom-checker', icon: <Bot />, label: 'Medico' },
     { href: '/awareness', icon: <Sparkles />, label: 'Health Awareness' },
 ];
 
